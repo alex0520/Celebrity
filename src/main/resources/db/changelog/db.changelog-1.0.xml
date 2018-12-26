@@ -11,17 +11,50 @@
             <column name="name" type="VARCHAR(45)"/>
             <column name="creation_date" type="DATETIME"/>
         </createTable>
-        <createTable tableName="person_relationship">
-            <column name="person_id" type="INT"/>
-            <column name="known_person_id" type="INT"/>
+        <createTable tableName="group">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="pk_group"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
             <column name="creation_date" type="DATETIME"/>
         </createTable>
-        <addPrimaryKey columnNames="person_id, known_person_id"
-                       constraintName="pk_person_relationship"
-                       tableName="person_relationship" />
+        <createTable tableName="person_group">
+            <column name="person_id" type="INT"/>
+            <column name="group_id" type="INT"/>
+            <column name="creation_date" type="DATETIME"/>
+        </createTable>
+        <addPrimaryKey columnNames="person_id, group_id"
+                       constraintName="pk_person_group"
+                       tableName="person_group" />
+        <addForeignKeyConstraint baseColumnNames="group_id"
+                                 baseTableName="person_group"
+                                 constraintName="fk_person_group_group_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="group"/>
+        <addForeignKeyConstraint baseColumnNames="person_id"
+                                 baseTableName="person_group"
+                                 constraintName="fk_person_group_person_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="person"/>
+        <createTable tableName="person_relationship">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="pk_person_relationship"/>
+            </column>
+            <column name="person_id" type="INT"/>
+            <column name="known_person_id" type="INT"/>
+            <column name="group_id" type="INT"/>
+            <column name="creation_date" type="DATETIME"/>
+        </createTable>
+        <addUniqueConstraint columnNames="person_id, known_person_id, group_id"
+                             constraintName="const_unique_person_rel_group"
+                             tableName="person_relationship" />
         <addForeignKeyConstraint baseColumnNames="person_id"
                                  baseTableName="person_relationship"
-                                 constraintName="fk_person_relationship_person"
+                                 constraintName="fk_person_relationship_person_id"
                                  onDelete="CASCADE"
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
@@ -33,6 +66,13 @@
                                  onUpdate="RESTRICT"
                                  referencedColumnNames="id"
                                  referencedTableName="person"/>
+        <addForeignKeyConstraint baseColumnNames="group_id"
+                                 baseTableName="person_relationship"
+                                 constraintName="fk_person_relationship_group_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="group"/>
     </changeSet>
     <changeSet author="alozano" id="20181225_populate_tables">
         <insert tableName="person">
@@ -51,19 +91,46 @@
             <column name="name" value="Daniel"/>
             <column name="creation_date" valueDate="now()"/>
         </insert>
+        <insert tableName="group">
+            <column name="name" value="Group 1"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_group">
+            <column name="person_id" valueNumeric="1"/>
+            <column name="group_id" valueNumeric="1"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_group">
+            <column name="person_id" valueNumeric="2"/>
+            <column name="group_id" valueNumeric="1"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_group">
+            <column name="person_id" valueNumeric="3"/>
+            <column name="group_id" valueNumeric="1"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_group">
+            <column name="person_id" valueNumeric="4"/>
+            <column name="group_id" valueNumeric="1"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
         <insert tableName="person_relationship">
             <column name="person_id" valueNumeric="1"/>
             <column name="known_person_id" valueNumeric="3"/>
+            <column name="group_id" valueNumeric="1"/>
             <column name="creation_date" valueDate="now()"/>
         </insert>
         <insert tableName="person_relationship">
             <column name="person_id" valueNumeric="2"/>
             <column name="known_person_id" valueNumeric="3"/>
+            <column name="group_id" valueNumeric="1"/>
             <column name="creation_date" valueDate="now()"/>
         </insert>
         <insert tableName="person_relationship">
             <column name="person_id" valueNumeric="4"/>
             <column name="known_person_id" valueNumeric="3"/>
+            <column name="group_id" valueNumeric="1"/>
             <column name="creation_date" valueDate="now()"/>
         </insert>
     </changeSet>
