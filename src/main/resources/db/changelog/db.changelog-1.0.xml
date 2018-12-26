@@ -1,0 +1,70 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="alozano" id="20181225_create_tables">
+        <createTable tableName="person">
+            <column autoIncrement="true" name="id" type="INT">
+                <constraints primaryKey="true" primaryKeyName="pk_person"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="creation_date" type="DATETIME"/>
+        </createTable>
+        <createTable tableName="person_relationship">
+            <column name="person_id" type="INT"/>
+            <column name="known_person_id" type="INT"/>
+            <column name="creation_date" type="DATETIME"/>
+        </createTable>
+        <addPrimaryKey columnNames="person_id, known_person_id"
+                       constraintName="pk_person_relationship"
+                       tableName="person_relationship" />
+        <addForeignKeyConstraint baseColumnNames="person_id"
+                                 baseTableName="person_relationship"
+                                 constraintName="fk_person_relationship_person"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="person"/>
+        <addForeignKeyConstraint baseColumnNames="known_person_id"
+                                 baseTableName="person_relationship"
+                                 constraintName="fk_person_relationship_known_person_id"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="person"/>
+    </changeSet>
+    <changeSet author="alozano" id="20181225_populate_tables">
+        <insert tableName="person">
+            <column name="name" value="Alexander"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person">
+            <column name="name" value="Brad"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person">
+            <column name="name" value="Christian"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person">
+            <column name="name" value="Daniel"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_relationship">
+            <column name="person_id" valueNumeric="1"/>
+            <column name="known_person_id" valueNumeric="3"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_relationship">
+            <column name="person_id" valueNumeric="2"/>
+            <column name="known_person_id" valueNumeric="3"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+        <insert tableName="person_relationship">
+            <column name="person_id" valueNumeric="4"/>
+            <column name="known_person_id" valueNumeric="3"/>
+            <column name="creation_date" valueDate="now()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
