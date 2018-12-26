@@ -5,7 +5,7 @@ Repository to resolve the "Find the celebrity problem"
 ### Steps to compile the project  
 This is a Maven project that builds a SpringBoot application that uses a MySQL database, to compile the project, edit the `application.properties` file, to set the correct database connection details, after execute `mvn clean install`.
 
-If everything works, you shoul see a file in the project's target folder, called `Celebrity-0.0.1-SNAPSHOT.jar`
+If everything works, you should see a file in the project's target folder, called `Celebrity-0.0.1-SNAPSHOT.jar`
 
 ### Steps to execute the project  
 
