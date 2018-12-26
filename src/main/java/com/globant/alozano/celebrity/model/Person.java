@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The class that maps the Person entity
+ */
 @Data
 @Entity(name = "person")
 public class Person implements Serializable, Comparable<Person> {

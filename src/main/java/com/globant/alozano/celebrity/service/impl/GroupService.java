@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,8 +25,13 @@ public class GroupService implements IGroupService {
 
 
     @Override
-    public List<Person> findByGroupId(Integer groupId) {
-        Optional<Group> optionalGroup = groupRepository.findById(groupId);
+    public Optional<Group> findById(Integer groupId) {
+        return groupRepository.findById(groupId);
+    }
+
+    @Override
+    public List<Person> findPeopleInAGroup(Integer groupId) {
+        Optional<Group> optionalGroup = findById(groupId);
         if (optionalGroup.isPresent()) {
             Group group = optionalGroup.get();
             return group.getPersonList().stream().sorted().collect(Collectors.toList());
@@ -38,12 +42,15 @@ public class GroupService implements IGroupService {
 
     @Override
     public Map<Person, List<Person>> findGroupRelationships(Integer groupId) {
-        List<Person> people = findByGroupId(groupId);
+        List<Person> people = findPeopleInAGroup(groupId);
         Map<Person, List<Person>> groupRelationships = people
                 .stream()
-                .collect(Collectors.toMap(o -> o, o -> personRepository.findRelatedPersons(o.getId(), groupId),
-                        (oldValue, newValue) -> oldValue
-                        , LinkedHashMap::new));
+                .collect(Collectors.toMap(o -> o, o -> personRepository.findRelatedPersons(o.getId(), groupId)));
         return groupRelationships;
+    }
+
+    @Override
+    public Boolean personKnowsPerson(Integer personId, Integer anotherPersonId, Integer groupId) {
+        return personRepository.countPersonRelationToAnotherPerson(personId, anotherPersonId, groupId) > 0;
     }
 }

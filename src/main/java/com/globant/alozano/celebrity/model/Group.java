@@ -17,6 +17,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The class that maps the Group entity
+ */
 @Data
 @Entity(name = "group")
 public class Group implements Serializable {
